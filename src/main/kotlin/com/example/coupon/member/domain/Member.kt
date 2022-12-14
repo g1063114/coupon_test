@@ -1,5 +1,6 @@
 package com.example.coupon.member.domain
 
+import com.example.coupon.common.domain.BaseDeleteEntity
 import com.example.coupon.common.domain.BaseEntity
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -21,6 +22,6 @@ class Member(
     @Column(name = "birthday", nullable = false)
     var birthday: String
 
-): BaseEntity(){
+): BaseDeleteEntity(){
 
 }
