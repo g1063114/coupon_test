@@ -14,7 +14,7 @@ class Coupon(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = null,
 
     @Column(name = "name", nullable = false)
     var name: String,
@@ -30,5 +30,9 @@ class Coupon(
 
     @Column(name = "coupon_end_datetime", nullable = false)
     var couponEndDateTime: LocalDateTime,
+
+    @OneToOne
+    @JoinColumn(name = "coupon_stock_id")
+    var couponStock: CouponStock
 
 ): BaseDeleteEntity()

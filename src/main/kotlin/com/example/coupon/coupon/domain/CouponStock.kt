@@ -1,25 +1,21 @@
-package com.example.coupon.member.domain
+package com.example.coupon.coupon.domain
 
 import com.example.coupon.common.domain.BaseDeleteEntity
-import com.example.coupon.common.domain.BaseEntity
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
 import javax.persistence.*
 
 @Entity
-@Table(name = "member.member")
+@Table(name = "coupon.coupon_stock")
 @DynamicInsert
 @DynamicUpdate
-class Member(
+class CouponStock(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "name", nullable = false)
-    var name: String,
-
-    @Column(name = "birthday", nullable = false)
-    var birthday: String
+    @Column(name = "total_stock", nullable = false)
+    var totalStock: Long,
 
 ): BaseDeleteEntity()
