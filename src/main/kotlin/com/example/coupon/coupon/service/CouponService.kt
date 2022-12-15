@@ -14,4 +14,6 @@ class CouponService(
     fun saveCoupon(request: ReqCouponSaveDTO){
         couponRepository.save(request.toEntity())
     }
+
+
 }
