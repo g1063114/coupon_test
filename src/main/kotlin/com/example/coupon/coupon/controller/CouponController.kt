@@ -1,5 +1,6 @@
 package com.example.coupon.coupon.controller
 
+import com.example.coupon.coupon.controller.dto.ReqCouponIssuanceSaveDTO
 import com.example.coupon.coupon.controller.dto.ReqCouponSaveDTO
 import com.example.coupon.coupon.service.CouponService
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,5 +19,12 @@ class CouponController(
         @Valid @RequestBody request: ReqCouponSaveDTO
     ){
         couponService.saveCoupon(request)
+    }
+
+    @PostMapping("/issuance")
+    fun saveCouponIssuance(
+        @Valid @RequestBody request: ReqCouponIssuanceSaveDTO
+    ){
+        couponService.saveCouponIssuance(request)
     }
 }
