@@ -1,10 +1,10 @@
 package com.example.coupon.coupon.service
 
 import com.example.coupon.common.utils.RedisUtil
+import com.example.coupon.common.utils.executeCallBack
 import com.example.coupon.coupon.controller.dto.ReqCouponIssuanceSaveDTO
 import com.example.coupon.coupon.controller.dto.ReqCouponSaveDTO
 import com.example.coupon.coupon.repository.CouponRepository
-import org.springframework.dao.DataAccessException
 import org.springframework.data.redis.core.RedisOperations
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.SessionCallback
@@ -33,7 +33,13 @@ class CouponService(
         val stock = coupon?.couponStock?.totalStock
 
 
-    }
+        redisTemplate.executeCallBack { operations ->
+            operations.multi()
+            redisUtil.count(operations, request)
+            redisUtil.add(operations, request)
+            operations.exec()
+        }
 
+    }
 
 }

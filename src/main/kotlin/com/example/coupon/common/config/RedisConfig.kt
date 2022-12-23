@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.serializer.StringRedisSerializer
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 @Configuration
 class RedisConfig(
@@ -28,8 +30,10 @@ class RedisConfig(
 
     @Bean
     fun redisTemplate(): RedisTemplate<*, *>{
-        val redisTemplate = RedisTemplate<Any, Any>()
+        val redisTemplate = RedisTemplate<String, String>()
         redisTemplate.setConnectionFactory(redisConnectionFactory())
+        redisTemplate.keySerializer = StringRedisSerializer()
+        redisTemplate.valueSerializer = StringRedisSerializer()
         return redisTemplate
     }
 }
