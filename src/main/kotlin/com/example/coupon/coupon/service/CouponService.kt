@@ -30,11 +30,13 @@ class CouponService(
      */
     fun saveCouponIssuance(request: ReqCouponIssuanceSaveDTO){
         val coupon = couponRepository.findByIdOrNull(request.couponId)
-        val stock = coupon?.couponStock?.totalStock
+            ?: throw Exception("coupon is null")
+        val stock = coupon.couponStock.totalStock
 
 
         redisTemplate.executeCallBack { operations ->
             operations.multi()
+            redisUtil.setCount(operations, stock)
             redisUtil.count(operations, request)
             redisUtil.add(operations, request)
             operations.exec()
