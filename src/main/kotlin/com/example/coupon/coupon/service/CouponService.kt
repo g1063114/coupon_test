@@ -37,29 +37,23 @@ class CouponService(
     /**
      * 쿠폰 발급
      */
-    fun saveCouponIssuance(request: ReqCouponIssuanceSaveDTO){
+    @Synchronized
+    fun saveCouponIssuance(request: ReqCouponIssuanceSaveDTO) {
         val coupon = couponRepository.findByIdOrNull(request.couponId)
             ?: throw Exception("coupon is null")
         val stock = coupon.couponStock.totalStock
 
         redisTemplate.executeCallBack { operations ->
-//            if ( validationTotalStock(stock, redisUtil.memberCount(operations, request)) ) {
-//                operations.watch(request.getKey())
-//                operations.multi()
-//                redisUtil.memberCount(operations, request)
-//                redisUtil.memberAdd(operations, request)
-//                operations.exec()
-//            }
             operations.watch(request.getKey())
-            redisUtil.totalStockAdd(operations, stock)
             val memberCount = redisUtil.memberCount(operations, request)
-            log.info("=====================Member Count : ${memberCount}======================")
-            operations.multi()
-            redisUtil.memberAdd(operations, request)
-            operations.exec()
-            val addCount = redisUtil.memberCount(operations, request)
-            log.info("=====================Add Count : ${addCount}======================")
-            if ( memberCount != addCount ){
+            if (validationTotalStock(stock, memberCount)) {
+                operations.multi()
+                redisUtil.memberCount(operations, request)
+                redisUtil.memberAdd(operations, request)
+                operations.exec()
+            }
+            val currentCount = redisUtil.memberCount(operations, request)
+            if ( memberCount != currentCount){
                 couponIssuanceRepository.save(
                     CouponIssuance(
                         memberId = request.memberId,
@@ -71,31 +65,6 @@ class CouponService(
                 )
             }
         }
-
-//        redisTemplate.opsForSet().add("stock:count", stock.toString())
-//        val size = redisTemplate.opsForSet().size("1:coupon")
-//        redisTemplate.opsForSet().add("1:coupon", request.memberId.toString())
-//        if ( size != redisTemplate.opsForSet().size("1:coupon") ){
-//            RedisTransaction.transaction(redisTemplate) {
-//
-//            }
-//        }
-//       if ( validationTotalStock(stock, redisUtil.totalStockCount(redisTemplate)) ){
-//            RedisTransaction.transaction(redisTemplate){
-//                redisUtil.totalStockAdd(it, stock)
-//                redisUtil.memberAdd(it, request)
-//                val totalStockCount = redisUtil.totalStockCount(it)
-//                log.info("COUNT : ${totalStockCount}")
-//                couponIssuanceRepository.save(CouponIssuance(
-//                        memberId = request.memberId,
-//                        couponId = request.couponId,
-//                        issuancedAt = LocalDateTime.now(),
-//                        expiredAt = coupon.couponStartDateTime.plusDays(coupon.validDate.toLong()),
-//                        useFlag = false
-//                    ))
-//
-//            }
-//        }
     }
 
     private fun validationTotalStock(total: Long, current: Long): Boolean{

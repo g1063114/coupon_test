@@ -30,3 +30,17 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+
+feign:
+  autoconfiguration:
+    jackson:
+      enabled: true
+  client:
+    config:
+      feignName: # @FeignClient에서 name 값, 전역으로 설정하려면 default
+        loggerLevel: BASIC #full
+        # feign의 전역 timeout 설정 : 5초
+        connectTimeout: 5000
+        readTimeout: 5000
+  target-api:
+    coupon: http://10.100.154.109:10888

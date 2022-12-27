@@ -21,12 +21,12 @@ class CouponApplicationTests(
 
 	@Test
 	fun 테스트() {
-		val executorService = Executors.newFixedThreadPool(3)
-		val countDownLatch = CountDownLatch(3)
-		for (i in 1..3) {
+		val executorService = Executors.newFixedThreadPool(1000)
+		val countDownLatch = CountDownLatch(1000)
+		for (i in 1..1000) {
 			executorService.execute {
 				couponService.saveCouponIssuance(
-					ReqCouponIssuanceSaveDTO(2,1, LocalDateTime.now())
+					ReqCouponIssuanceSaveDTO(8,1, LocalDateTime.now())
 				)
 				countDownLatch.countDown()
 			}

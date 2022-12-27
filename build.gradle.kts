@@ -21,6 +21,12 @@ group = "com.example"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2021.0.4")
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -43,6 +49,10 @@ dependencies {
 
 	val hibernateTypes52Version = "2.12.1"
 	implementation("com.vladmihalcea:hibernate-types-52:${hibernateTypes52Version}")
+
+	implementation("org.redisson:redisson-spring-boot-starter:3.18.1")
+
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:2.2.7.RELEASE")
 }
 
 tasks.withType<KotlinCompile> {
