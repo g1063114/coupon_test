@@ -31,7 +31,7 @@ class Coupon(
     @Column(name = "coupon_end_datetime", nullable = false)
     var couponEndDateTime: LocalDateTime,
 
-    @OneToOne(targetEntity = CouponStock::class ,cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = CouponStock::class ,cascade = [CascadeType.PERSIST], fetch = FetchType.EAGER)
     @JoinColumn(name = "coupon_stock_id")
     var couponStock: CouponStock
 

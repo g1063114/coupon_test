@@ -1,6 +1,7 @@
 package com.example.coupon.common.utils
 
 import com.example.coupon.coupon.controller.dto.ReqCouponIssuanceSaveDTO
+import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisOperations
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.SessionCallback
@@ -10,20 +11,21 @@ import org.springframework.stereotype.Component
 class RedisUtil(
     private val redisTemplate: RedisTemplate<String, String>
 ){
-    fun count(operations: RedisOperations<Any, Any>, dto: ReqCouponIssuanceSaveDTO): Long{
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    fun totalStockAdd(operations: RedisOperations<String, String>, stock: Long){
+        val key = "stock:total"
+        operations.opsForSet().add(key, stock.toString())
+    }
+    fun memberCount(operations: RedisOperations<String, String>, dto: ReqCouponIssuanceSaveDTO): Long{
         val key = dto.getKey()
         return operations.opsForSet().size(key) ?: 0
     }
 
-    fun add(operations: RedisOperations<Any, Any>, dto: ReqCouponIssuanceSaveDTO): Long{
+    fun memberAdd(operations: RedisOperations<String, String>, dto: ReqCouponIssuanceSaveDTO){
         val key = dto.getKey()
-        return operations.opsForSet().add(key, dto.memberId.toString()) ?: 0
+        operations.opsForSet().add(key, dto.memberId.toString())
     }
-    fun setCount(operations: RedisOperations<Any, Any>, stock: Long){
-        val key = "count"
-        return operations.opsForValue().set(key, stock.toString())
-    }
-
 }
 inline fun <reified K : Any, reified V: Any, reified T> RedisTemplate<K, V>.executeCallBack(crossinline callback: (RedisOperations<K, V>) -> T): T{
     val callback = object : SessionCallback<T> {

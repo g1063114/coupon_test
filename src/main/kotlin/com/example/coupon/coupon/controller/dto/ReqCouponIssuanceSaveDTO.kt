@@ -20,6 +20,6 @@ class ReqCouponIssuanceSaveDTO(
     val enterDateTime: LocalDateTime
 ){
     fun getKey(): String{
-        return "${couponId}-coupon"
+        return "${couponId}:coupon"
     }
 }
