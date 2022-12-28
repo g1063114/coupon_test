@@ -33,4 +33,9 @@ class CouponController(
     fun localConnectionTest(): String{
         return "connenction"
     }
+
+    @PostMapping("/feign")
+    fun feignTest(){
+        couponService.feignTest()
+    }
 }

@@ -43,4 +43,4 @@ feign:
         connectTimeout: 5000
         readTimeout: 5000
   target-api:
-    coupon: http://10.100.154.109:10888
+    coupon: http://10.100.154.54:10888
